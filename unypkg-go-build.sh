@@ -50,7 +50,6 @@ version_details
 echo "newer" >release-"$pkgname"
 
 wget -O- https://go.dev/dl/go"$latest_ver".linux-amd64.tar.gz | tar xfz -
-mv go go-"$latest_ver"
 
 #git_clone_source_repo
 #cd "$pkgname" || exit
