@@ -76,7 +76,9 @@ get_include_paths
 ####################################################
 ### Start of individual build script
 
-install -d /uny/pkg/"$pkgname"/"$pkgver" go-*
+cd /sources || exit
+mkdir -pv /uny/pkg/"$pkgname"
+mv go-"$pkgver" /uny/pkg/"$pkgname"/"$pkgver" 
 
 ####################################################
 ### End of individual build script
