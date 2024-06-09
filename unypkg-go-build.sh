@@ -35,13 +35,13 @@ mkdir -pv /uny/sources
 cd /uny/sources || exit
 
 pkgname="go"
-pkggit="https://github.com/go/go.git refs/tags/*"
+pkggit="https://github.com/golang/go.git refs/tags/go*"
 gitdepth="--depth=1"
 
 ### Get version info from git remote
 # shellcheck disable=SC2086
-latest_head="$(git ls-remote --refs --tags --sort="v:refname" $pkggit | grep -E "v[0-9.]+$" | tail --lines=1)"
-latest_ver="$(echo "$latest_head" | grep -o "v[0-9.].*" | sed "s|v||")"
+latest_head="$(git ls-remote --refs --tags --sort="v:refname" $pkggit | grep -E "go[0-9.]+$" | tail --lines=1)"
+latest_ver="$(echo "$latest_head" | grep -o "go[0-9.].*" | sed "s|go||")"
 latest_commit_id="$(echo "$latest_head" | cut --fields=1)"
 
 version_details
@@ -49,8 +49,10 @@ version_details
 # Release package no matter what:
 echo "newer" >release-"$pkgname"
 
-git_clone_source_repo
+wget -O- https://go.dev/dl/go"$latest_ver".linux-amd64.tar.gz | tar xfz -
+mv go go-"$latest_ver"
 
+#git_clone_source_repo
 #cd "$pkgname" || exit
 #./autogen.sh
 #cd /uny/sources || exit
@@ -75,14 +77,7 @@ get_include_paths
 ####################################################
 ### Start of individual build script
 
-unset LD_RUN_PATH
-
-./configure \
-    --prefix=/uny/pkg/"$pkgname"/"$pkgver"
-
-make -j"$(nproc)"
-make -j"$(nproc)" check 
-make -j"$(nproc)" install
+install -d /uny/pkg/"$pkgname"/"$pkgver" go-*
 
 ####################################################
 ### End of individual build script
